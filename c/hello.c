@@ -97,7 +97,7 @@ int createContext(Hello_t *m)
 void createQueue(Hello_t *m)
 {
 	/* Create Command Queue */
-#ifdef _FREESCALE
+#if defined(_FREESCALE) || defined(_NVIDIA)
 	m->command_queue = clCreateCommandQueue(m->context, m->device_id, 0, &m->ret);
 #else
 	m->command_queue = clCreateCommandQueueWithProperties(m->context, m->device_id, 0, &m->ret);
