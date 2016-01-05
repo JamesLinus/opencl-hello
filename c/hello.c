@@ -10,6 +10,7 @@
  
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)
+#define TRACE(format, ...) fprintf(stdout, format, ## __VA_ARGS__ )
 
 typedef struct tagHello
 {
@@ -40,11 +41,11 @@ char *loadSource(size_t *source_size)
 	source_str = (char*)malloc(MAX_SOURCE_SIZE);
 	*source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
 	fclose(fp);
-	fprintf(stdout, "Load Source code (%zd)\n", *source_size);
+	TRACE("Load Source code (%zd)\n", *source_size);
 	return source_str;
 }
 
-void createContext(Hello_t *m)
+int createContext(Hello_t *m)
 {
 	m->device_id = NULL;
 	m->context = NULL;
@@ -59,11 +60,26 @@ void createContext(Hello_t *m)
 
 	/* Get Platform and Device Info */
 	m->ret = clGetPlatformIDs(1, &m->platform_id, &m->ret_num_platforms);
-	m->ret = clGetDeviceIDs(m->platform_id, CL_DEVICE_TYPE_DEFAULT, 1, &m->device_id, &m->ret_num_devices);
-	fprintf(stdout, "clGetDeviceIDs ret_num_devices = %d, for device_id = %p\n", m->ret_num_devices, (int*)m->device_id);
-	 
+	TRACE("m->ret = %d\n", m->ret);
+	TRACE("clGetPlatformIDs ret_num_platforms = %d, for platform_id = %p\n", m->ret_num_platforms, (int*)m->platform_id);
+
+	//CL_DEVICE_TYPE_CPU CL_DEVICE_TYPE_GPU CL_DEVICE_TYPE_ACCELERATOR CL_DEVICE_TYPE_DEFAULT CL_DEVICE_TYPE_ALL
+	m->ret = clGetDeviceIDs(m->platform_id, CL_DEVICE_TYPE_GPU, 1, &m->device_id, &m->ret_num_devices);
+	TRACE("m->ret = %d\n", m->ret);
+	TRACE("clGetDeviceIDs ret_num_devices = %d, for device_id = %p\n", m->ret_num_devices, (int*)m->device_id);
+	
+	if(!m->device_id) 
+		return 0;
+
+	char cBuffer[1024];
+	clGetDeviceInfo(m->device_id, CL_DEVICE_NAME, sizeof(cBuffer), &cBuffer, NULL);
+	printf("CL_DEVICE_NAME: %s\n", cBuffer);
+	clGetDeviceInfo(m->device_id, CL_DRIVER_VERSION, sizeof(cBuffer), &cBuffer, NULL);
+	printf("CL_DRIVER_VERSION: %s\n\n", cBuffer);
+
 	/* Create OpenCL context */
 	m->context = clCreateContext(NULL, 1, &m->device_id, NULL, NULL, &m->ret);
+	return 1;
 }
 
 void createQueue(Hello_t *m)
@@ -85,7 +101,7 @@ void createKernel(Hello_t *m, char *source_str, size_t source_size)
 	m->program = clCreateProgramWithSource(m->context, 1, (const char **)&source_str,
 			(const size_t *)&source_size, &m->ret);
 	 
-	fprintf(stdout, "Build Kernel Program\n");
+	TRACE("Build Kernel Program\n");
 
 	/* Build Kernel Program */
 	m->ret = clBuildProgram(m->program, 1, &m->device_id, NULL, NULL, NULL);
@@ -139,7 +155,8 @@ int main()
 
 	source_str = loadSource(&source_size);
 
-	createContext(&m);	
+	if(createContext(&m) == 0)
+		return 1;
 	 
 	createQueue(&m);
 
