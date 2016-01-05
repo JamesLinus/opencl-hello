@@ -63,11 +63,12 @@ int createContext(Hello_t *m)
 	TRACE("m->ret = %d\n", m->ret);
 	TRACE("clGetPlatformIDs ret_num_platforms = %d, for platform_id = %p\n", m->ret_num_platforms, (int*)m->platform_id);
 
+#ifdef _FREESCALE	
 	//CL_DEVICE_TYPE_CPU CL_DEVICE_TYPE_GPU CL_DEVICE_TYPE_ACCELERATOR CL_DEVICE_TYPE_DEFAULT CL_DEVICE_TYPE_ALL
 	m->ret = clGetDeviceIDs(m->platform_id, CL_DEVICE_TYPE_GPU, 1, &m->device_id, &m->ret_num_devices);
 	TRACE("m->ret = %d\n", m->ret);
 	TRACE("clGetDeviceIDs ret_num_devices = %d, for device_id = %p\n", m->ret_num_devices, (int*)m->device_id);
-	
+
 	if(!m->device_id) 
 		return 0;
 
@@ -76,6 +77,12 @@ int createContext(Hello_t *m)
 	printf("CL_DEVICE_NAME: %s\n", cBuffer);
 	clGetDeviceInfo(m->device_id, CL_DRIVER_VERSION, sizeof(cBuffer), &cBuffer, NULL);
 	printf("CL_DRIVER_VERSION: %s\n\n", cBuffer);
+#else
+	m->ret = clGetDeviceIDs(m->platform_id, CL_DEVICE_TYPE_DEFAULT, 1, &m->device_id, &m->ret_num_devices);
+	TRACE("m->ret = %d\n", m->ret);
+	TRACE("clGetDeviceIDs ret_num_devices = %d, for device_id = %p\n", m->ret_num_devices, (int*)m->device_id);
+
+#endif //_FREESCALE
 
 	/* Create OpenCL context */
 	m->context = clCreateContext(NULL, 1, &m->device_id, NULL, NULL, &m->ret);
@@ -85,8 +92,11 @@ int createContext(Hello_t *m)
 void createQueue(Hello_t *m)
 {
 	/* Create Command Queue */
+#ifdef _FREESCALE
 	m->command_queue = clCreateCommandQueue(m->context, m->device_id, 0, &m->ret);
-	//m->command_queue = clCreateCommandQueueWithProperties(m->context, m->device_id, 0, &m->ret);
+#else
+	m->command_queue = clCreateCommandQueueWithProperties(m->context, m->device_id, 0, &m->ret);
+#endif // _FREESCALE
 }
 
 void createBuffer(Hello_t *m)
