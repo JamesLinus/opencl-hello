@@ -69,6 +69,12 @@ protected:
 		}
 
 		fprintf(stdout, "clGetDeviceIDs ret_num_devices = %d, for device_id = %p, ret = %u\n", m.ret_num_devices, (int*)m.device_id, m.ret);
+
+		char cBuffer[1024];
+		clGetDeviceInfo(m.device_id, CL_DEVICE_NAME, sizeof(cBuffer), &cBuffer, NULL);
+		printf("CL_DEVICE_NAME: %s\n", cBuffer);
+		clGetDeviceInfo(m.device_id, CL_DRIVER_VERSION, sizeof(cBuffer), &cBuffer, NULL);
+		printf("CL_DRIVER_VERSION: %s\n\n", cBuffer);
 		 
 		/* Create OpenCL context */
 		m.context = clCreateContext(NULL, 1, &m.device_id, NULL, NULL, &m.ret);
