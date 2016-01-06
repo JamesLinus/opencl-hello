@@ -2,7 +2,8 @@
 // gcc cl_sample.c -lGAL -lOpenCL -o cl_sample.
 // modprobe galcore && ./cl_sample
 // -std=c99
-
+// example
+// gcc -DLINUX -DUSE_SOC_MX6 -Wall -O2 -fsigned-char -DEGL_API_FB -DGPU_TYPE_VIV -DGL_GLEXT_PROTOTYPES -DENABLE_GPU_RENDER_20 -I../include -I/usr/include -c -o main.o main.c -std=c99
 //************************************************************
 // Demo OpenCL application to compute a simple vector addition
 // computation between 2 arrays on the GPU
@@ -45,13 +46,13 @@ int main(int argc, char **argv)
 	//Get an OpenCL platform
 	cl_platform_id cpPlatform;
 	clGetPlatformIDs(1, &cpPlatform, &ret_num_platforms);
-	printf("clGetPlatformIDs: cpPlatform = %d, ret_num_platforms = %d\n", 
+	printf("clGetPlatformIDs: cpPlatform = %p, ret_num_platforms = %d\n", 
 			(int *)cpPlatform, ret_num_platforms);
 
 	// Get a GPU device
 	cl_device_id cdDevice = 0;
 	clGetDeviceIDs(cpPlatform, CL_DEVICE_TYPE_GPU, 1, &cdDevice, NULL);
-	printf("clGetDeviceIDs: cdDevice = %d\n", (int *)cdDevice);
+	printf("clGetDeviceIDs: cdDevice = %p\n", (int *)cdDevice);
 
 	char cBuffer[1024];
 	clGetDeviceInfo(cdDevice, CL_DEVICE_NAME, sizeof(cBuffer), &cBuffer, NULL);
