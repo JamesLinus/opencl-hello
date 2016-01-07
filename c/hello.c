@@ -59,6 +59,9 @@ int createContext(Hello_t *m)
 	m->ret;
 
 	/* Get Platform and Device Info */
+	m->ret = clGetPlatformIDs(0, 0, &m->ret_num_platforms);
+	TRACE("m->ret_num_platforms = %d\n", m->ret_num_platforms);
+
 	m->ret = clGetPlatformIDs(1, &m->platform_id, &m->ret_num_platforms);
 	TRACE("m->ret = %d\n", m->ret);
 	TRACE("clGetPlatformIDs ret_num_platforms = %d, for platform_id = %p\n", m->ret_num_platforms, (int*)m->platform_id);
