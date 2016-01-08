@@ -6,7 +6,7 @@ void addx(int a, int b, char *str, int idx)
 __kernel void hello(__global char* string)
 {
 	int base = get_global_id(0);
-//	string[0] = 'H';
+	string[0] = 'H';
 	string[1] = 'e';
 	string[2] = 'l';
 	string[3] = 'l';
@@ -17,7 +17,8 @@ __kernel void hello(__global char* string)
 	string[8] = 'o';
 	string[9] = 'r';
 	string[10] = 'l';
-	addx('d', base, string, 11);
+	string[11] = 'd';
+//	addx('d', base, string, 11);
 	string[12] = '!';
 	string[13] = '\0';
 	string[32] = string[0] + 0;
