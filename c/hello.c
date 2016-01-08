@@ -10,7 +10,7 @@
  
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)
-#define TRACE(format, ...) fprintf(stdout, format, ## __VA_ARGS__ )
+#define TRACE(format, ...) fprintf(stdout, "(%s:%d) " format, __FUNCTION__, __LINE__, ## __VA_ARGS__ )
 
 typedef struct tagHello
 {
@@ -118,12 +118,14 @@ void createKernel(Hello_t *m, char *source_str, size_t source_size)
 
 	/* Build Kernel Program */
 	m->ret = clBuildProgram(m->program, 1, &m->device_id, NULL, NULL, NULL);
+	TRACE("m->ret = %d\n", m->ret);
 	 
 	/* Create OpenCL Kernel */
 	m->kernel = clCreateKernel(m->program, "hello", &m->ret);
 	 
 	/* Set OpenCL Kernel Parameters */
 	m->ret = clSetKernelArg(m->kernel, 0, sizeof(cl_mem), (void *)&m->memobj);
+	TRACE("m->ret = %d\n", m->ret);
 }
 
 void enqueueKernel(Hello_t *m)
