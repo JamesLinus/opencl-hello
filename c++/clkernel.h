@@ -1,6 +1,7 @@
 #ifndef _CLKERNEL_H
 #define _CLKERNEL_H
 #include <clobject.h>
+#include <clprogram.h>
 
 class ClKernel : public ClObject {
 private:
@@ -20,9 +21,9 @@ public:
 	void close() {
 		lastError = clReleaseKernel(kernel);
 	}
-	void open(char *kernel_name) {	 
+	void open(ClProgram &program) {	 
 		/* Create OpenCL Kernel */
-		kernel = clCreateKernel(program, kernel_name, &lastError);
+		kernel = clCreateKernel(program.get(), prgram.name(), &lastError);
 	}
 	void SetKernelArg(ClBuffer buffer) {	 
 		m.memobj = buffer;

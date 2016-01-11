@@ -40,19 +40,17 @@ public:
 		const size_t local_work_size[1] = {1};
 		/* Execute OpenCL Kernel */
 		//ret = clEnqueueTask(command_queue, kernel, 0, NULL,NULL);
-		lastError = clEnqueueNDRangeKernel(command_queue, kernel, 1, global_work_offset, 
+		lastError = clEnqueueNDRangeKernel(command_queue, kernel.get(), 1, global_work_offset, 
 				global_work_size, local_work_size, 0, NULL, NULL);
 	};
-	void EnqueueWriteBuffer(ClBuffer buffer) {
-		m.memobj = buffer.get();
+	void EnqueueWriteBuffer(ClBuffer buffer, const char *string) {
 		/* Copy input to the memory buffer */
-		lastError = clEnqueueWriteBuffer(command_queue, m.memobj, CL_TRUE, 0,
+		lastError = clEnqueueWriteBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 	};
-	void EnqueueReadBuffer(ClBuffer buffer) {
-		m.memobj = buffer.get();
+	void EnqueueReadBuffer(ClBuffer buffer, const char *string) {
 		/* Copy results from the memory buffer */
-		lastError = clEnqueueReadBuffer(command_queue, m.memobj, CL_TRUE, 0,
+		lastError = clEnqueueReadBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 	};
 };
