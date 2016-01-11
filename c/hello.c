@@ -17,7 +17,8 @@ typedef struct tagHello
 	cl_device_id device_id;
 	cl_context context;
 	cl_command_queue command_queue;
-	cl_mem memobj;
+	cl_mem memobj_output;
+	cl_mem memobj_input;
 	cl_program program;
 	cl_kernel kernel;
 	cl_platform_id platform_id;
@@ -50,7 +51,8 @@ int createContext(Hello_t *m)
 	m->device_id = NULL;
 	m->context = NULL;
 	m->command_queue = NULL;
-	m->memobj = NULL;
+	m->memobj_output = NULL;
+	m->memobj_input = NULL;
 	m->program;
 	m->kernel;
 	m->platform_id;
@@ -105,7 +107,9 @@ void createQueue(Hello_t *m)
 void createBuffer(Hello_t *m)
 {
 	/* Create Memory Buffer */
-	m->memobj = clCreateBuffer(m->context, CL_MEM_READ_WRITE,MEM_SIZE * sizeof(char), NULL, &m->ret);
+	m->memobj_output = clCreateBuffer(m->context, CL_MEM_READ_WRITE, MEM_SIZE * sizeof(char), NULL, &m->ret);
+
+	m->memobj_input = clCreateBuffer(m->context, CL_MEM_WRITE_ONLY, MEM_SIZE * sizeof(char), 0, 0);
 }
 
 void createKernel(Hello_t *m, char *source_str, size_t source_size)
@@ -119,32 +123,42 @@ void createKernel(Hello_t *m, char *source_str, size_t source_size)
 	/* Build Kernel Program */
 	m->ret = clBuildProgram(m->program, 1, &m->device_id, NULL, NULL, NULL);
 	TRACE("m->ret = %d\n", m->ret);
-	 
+
 	/* Create OpenCL Kernel */
 	m->kernel = clCreateKernel(m->program, "hello", &m->ret);
 	 
 	/* Set OpenCL Kernel Parameters */
-	m->ret = clSetKernelArg(m->kernel, 0, sizeof(cl_mem), (void *)&m->memobj);
+	m->ret = clSetKernelArg(m->kernel, 0, sizeof(cl_mem), (void *)&m->memobj_output);
 	TRACE("m->ret = %d\n", m->ret);
+	m->ret = clSetKernelArg(m->kernel, 1, sizeof(cl_mem), (void *)&m->memobj_input);
+	TRACE("m->ret = %d\n", m->ret);
+
 }
 
-void enqueueKernel(Hello_t *m)
+void enqueueKernel(Hello_t *m, char *str)
 {
 	const size_t *global_work_offset = NULL;
 	const size_t global_work_size[1] = {1};
 	const size_t local_work_size[1] = {1};
 
+	m->ret = clEnqueueWriteBuffer(m->command_queue, m->memobj_input, CL_TRUE, 
+			0, sizeof(char) * MEM_SIZE, str, 0, 0, 0);
+
 	/* Execute OpenCL Kernel */
 	//ret = clEnqueueTask(command_queue, kernel, 0, NULL,NULL);
 	m->ret = clEnqueueNDRangeKernel(m->command_queue, m->kernel, 1, global_work_offset, 
 			global_work_size, local_work_size, 0, NULL, NULL);
+	TRACE("m->ret = %d\n", m->ret);
+
+	clFinish(m->command_queue);
 }
 
 void copyResults(Hello_t *m, char *string)
 {
 	/* Copy results from the memory buffer */
-	m->ret = clEnqueueReadBuffer(m->command_queue, m->memobj, CL_TRUE, 0,
-			MEM_SIZE * sizeof(char),string, 0, NULL, NULL);
+	m->ret = clEnqueueReadBuffer(m->command_queue, m->memobj_output, CL_TRUE, 0,
+			MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
+	TRACE("m->ret = %d\n", m->ret);
 }
 
 void destroyContext(Hello_t *m)
@@ -154,7 +168,7 @@ void destroyContext(Hello_t *m)
 	m->ret = clFinish(m->command_queue);
 	m->ret = clReleaseKernel(m->kernel);
 	m->ret = clReleaseProgram(m->program);
-	m->ret = clReleaseMemObject(m->memobj);
+	m->ret = clReleaseMemObject(m->memobj_output);
 	m->ret = clReleaseCommandQueue(m->command_queue);
 	m->ret = clReleaseContext(m->context);
 }
@@ -163,7 +177,8 @@ int main()
 {
 	Hello_t m;
 	 
-	char string[MEM_SIZE];
+	char ostring[MEM_SIZE];
+	char istring[MEM_SIZE];
 	 
 	char *source_str = NULL;
 	size_t source_size = 0;
@@ -179,12 +194,21 @@ int main()
 
 	createKernel(&m, source_str, source_size);
 	
-  	enqueueKernel(&m);
+	istring[0] = 0;
+  	enqueueKernel(&m, istring);
 
-	copyResults(&m, string);	
+	copyResults(&m, ostring);	
 	 
 	/* Display Result */
-	puts(string);
+	puts(ostring);
+
+	istring[0] = 7;
+  	enqueueKernel(&m, istring);
+
+	copyResults(&m, ostring);	
+	 
+	/* Display Result */
+	puts(ostring);
 	
   	destroyContext(&m);	
 	 

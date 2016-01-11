@@ -1,25 +1,29 @@
 void addx(int a, int b, char *str, int idx)
 {
-	str[idx] = a + b;
+	str[idx] = a + b + 1;
 }
 
-__kernel void hello(__global char* string)
+__kernel void hello(__global char* ostr, __global char *istr)
 {
 	int base = get_global_id(0);
-	string[0] = 'H';
-	string[1] = 'e';
-	string[2] = 'l';
-	string[3] = 'l';
-	string[4] = 'o';
-	string[5] = ',';
-	string[6] = ' ';
-	string[7] = 'W';
-	string[8] = 'o';
-	string[9] = 'r';
-	string[10] = 'l';
-	string[11] = 'd';
-//	addx('d', base, string, 11);
-	string[12] = '!';
-	string[13] = '\0';
-	string[32] = string[0] + 0;
+	if(istr[0] < 1) {
+		ostr[0] = 'H';
+	} else {
+		ostr[0] = 'D';
+	}
+	ostr[1] = 'e';
+	ostr[2] = 'l';
+	ostr[3] = 'l';
+	ostr[4] = 'o';
+	ostr[5] = ',';
+	ostr[6] = ' ';
+	ostr[7] = 'W';
+	ostr[8] = 'o';
+	ostr[9] = 'r';
+	ostr[10] = 'l';
+	ostr[11] = 'd';
+//	addx('d', base, ostr, 11);
+	ostr[12] = '!';
+	ostr[13] = '\0';
+	ostr[32] = ostr[0] + 0;
 }
