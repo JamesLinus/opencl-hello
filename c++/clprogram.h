@@ -6,11 +6,11 @@
 class ClProgram : public ClObject {
 private:
 protected:
-	cl_program program;
 	size_t source_size;
 	char *source_str;
 	const char *program_name;
 public:
+	cl_program program;
 	ClProgram() : ClObject() {
 	};
 	ClProgram(ClContext &context, const char *fileName, const char *progname) : ClObject() {
@@ -63,17 +63,18 @@ public:
 			m_bOpen = true;
 	};
 	void BuildProgram(ClPlatform platform) {
-		if(is_open())
+		if(!is_open())
 			return;
 		if(!platform.is_open())
 			return;
 
 		cl_device_id device_id = platform.get();
+
 		/* Build Kernel Program */
 		lastError = clBuildProgram(program, 1, &device_id, NULL, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
 	};
-	cl_program get() {
+	cl_program& get() {
 		return program;
 	}
 };

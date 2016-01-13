@@ -8,7 +8,6 @@ class ClCommandQueue : public ClObject {
 private:
 protected:
 	cl_command_queue command_queue;
-	ClContext context;
 public:
 	ClCommandQueue() {
 	};
@@ -57,7 +56,7 @@ public:
 				global_work_size, local_work_size, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
 	};
-	void EnqueueWriteBuffer(ClBuffer buffer, const char *string) {
+	void EnqueueWriteBuffer(ClBuffer &buffer, const char *string) {
 		if(!is_open())
 			return;
 		if(!buffer.is_open())
@@ -66,18 +65,24 @@ public:
 		lastError = clEnqueueWriteBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
-		TRACE("string = %s\n", string);
+		if(lastError == CL_SUCCESS) {
+			TRACE("string = %s\n", string);
+		}
 	};
-	void EnqueueReadBuffer(ClBuffer buffer, char *string) {
+	void EnqueueReadBuffer(ClBuffer &buffer, char *string) {
 		if(!is_open())
 			return;
 		if(!buffer.is_open())
 			return;
+		TRACE("before string = %s\n", string);
 		/* Copy results from the memory buffer */
 		lastError = clEnqueueReadBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
-		TRACE("string = %s\n", string);
+		/* Display Result */
+		if(lastError == CL_SUCCESS) {
+			TRACE("string = %s\n", string);
+		}
 	};
 };
 

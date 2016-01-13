@@ -53,7 +53,7 @@ public:
 	~ClPlatform() {
 		close();
 	};
-	cl_device_id get() {
+	cl_device_id& get() {
 		return device_id;
 	};
 };

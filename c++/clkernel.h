@@ -7,8 +7,6 @@ class ClKernel : public ClObject {
 private:
 protected:
 	cl_kernel kernel;
-	ClBuffer buffer;
-	ClProgram program;
 public:
 	ClKernel() {
 	};
@@ -33,8 +31,10 @@ public:
 		TRACE("program name = %s\n", program.name());
 
 		cl_program prog = program.get();
+		TRACE("program = %p\n", prog);
+
 		/* Create OpenCL Kernel */
-		kernel = clCreateKernel(program.get(), program.name(), &lastError);
+		kernel = clCreateKernel(program.program, program.name(), &lastError);
 		TRACE("lastError = %d\n", lastError);
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
@@ -45,13 +45,13 @@ public:
 		if(!buffer.is_open())
 			return;
 		cl_mem memobj = buffer.get();
-		TRACE("mem = %p\n", memobj);
+		//TRACE("mem = %p\n", memobj);
 		/* Set OpenCL Kernel Parameters */
 		lastError = clSetKernelArg(kernel, index, sizeof(cl_mem), (void *)&memobj);
 		TRACE("lastError = %d\n", lastError);
 		TRACE("index = %d\n", index);
 	};
-	cl_kernel get() {
+	cl_kernel& get() {
 		return kernel;
 	}
 };

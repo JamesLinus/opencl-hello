@@ -21,7 +21,8 @@ int main() {
 	char istr[MEM_SIZE] = {"adveng"};
 	char ostr[MEM_SIZE] = {"blank"};
 
-	ClPlatform platform(CL_DEVICE_TYPE_GPU);
+	//ClPlatform platform(CL_DEVICE_TYPE_GPU);
+	ClPlatform platform(CL_DEVICE_TYPE_DEFAULT);
 
 	ClContext context(platform);
 
@@ -41,10 +42,7 @@ int main() {
 	command_queue.EnqueueKernel(kernel);
 	command_queue.EnqueueReadBuffer(obuffer, ostr);
 
-	/* Display Result */
-	//puts(ostr);
-
-	printf("atl = %d\n", ostr[32]);
+	//printf("atl = %d\n", ostr[32]);
 	
 	return 0;
 }
