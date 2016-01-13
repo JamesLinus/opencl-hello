@@ -43,9 +43,9 @@ public:
 			m_bOpen = true;
 	};
 	void enqueueKernel(ClKernel &kernel) {
-		const size_t *global_work_offset = NULL;
-		const size_t global_work_size[1] = {1};
-		const size_t local_work_size[1] = {1};
+		const size_t *global_work_offset = NULL; // must be NULL
+		const size_t global_work_size[1] = {1}; //get_global_id
+		const size_t local_work_size[1] = {1}; //get_local_size()
 		if(!is_open())
 			return;
 		if(!kernel.is_open())
