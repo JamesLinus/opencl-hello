@@ -38,6 +38,12 @@ public:
 	cl_context& get() {
 		return context;
 	}
+	void getEvent(cl_event &evt) {
+		if(!is_open())
+			return;
+		evt = clCreateUserEvent(context, &lastError);
+		TRACE("lastError = %d\n", lastError);
+	}
 };
 
 

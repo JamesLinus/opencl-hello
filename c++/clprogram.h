@@ -33,7 +33,7 @@ public:
 		source_str = (char*)malloc(MAX_SOURCE_SIZE);
 		source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
 		fclose(fp);
-		TRACE("Load Source code (size=%zd)\n", source_size);
+		INFO("Load Source code (size=%zd)\n", source_size);
 		//TRACE("src = %s\n", source_str);
 		return source_str;
 	};
