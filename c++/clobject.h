@@ -20,6 +20,11 @@ protected:
 	int m_bOpen;
 	cl_int lastError;
 public:
+	ClObject() {
+		m_bOpen = false;
+	};
+	~ClObject() {
+	}
 	int is_open() {
 		return m_bOpen;
 	};

@@ -3,12 +3,18 @@
 #include <clobject.h>
 #include <clcontext.h>
 
+static const char *tmpName = "hello";
+
 class ClProgram : public ClObject {
 private:
 protected:
 	cl_program program;
+	size_t source_size;
 public:
-	ClProgram() {
+	ClProgram() : ClObject() {
+	};
+	ClProgram(ClContext &context, const char *source_str) : ClObject() {
+		open(context, source_str);
 	};
 	~ClProgram() {
 		close();
@@ -29,20 +35,42 @@ public:
 		TRACE("Load Source code (size=%zd)\n", *source_size);
 		return source_str;
 	};
-	char *name() {
-		return "hello";
+	const char *name() {
+		return tmpName;
 	}
 	void close() {
+		if(!m_bOpen)
+			return;
 		lastError = clReleaseProgram(program);
+		TRACE("lastError = %d\n", lastError);
+		m_bOpen = false;
 	}
-	void open() {
+	void open(ClContext &context, const char *source_str) {
+		if(is_open())
+			return;
+		if(!context.is_open())
+			return;
+
 		/* Create Kernel Program from the source */
 		program = clCreateProgramWithSource(context.get(), 1, (const char **)&source_str,
 				(const size_t *)&source_size, &lastError);
+		TRACE("lastError = %d\n", lastError);
+		if(lastError == CL_SUCCESS)
+			m_bOpen = true;
 	};
 	void BuildProgram(ClPlatform platform) {
+		if(is_open())
+			return;
+		if(!platform.is_open())
+			return;
+
+		cl_device_id device_id = platform.get();
 		/* Build Kernel Program */
-		lastError = clBuildProgram(program.get(), 1, &m.device_id, NULL, NULL, NULL);
+		lastError = clBuildProgram(program, 1, &device_id, NULL, NULL, NULL);
+		TRACE("lastError = %d\n", lastError);
 	};
+	cl_program get() {
+		return program;
+	}
 };
 #endif // _CLPROGRAM_H

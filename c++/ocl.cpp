@@ -18,36 +18,37 @@
 #define MAX_SOURCE_SIZE (0x100000)
 
 int main() {
-	char string[MEM_SIZE];
+	char istr[MEM_SIZE] = {"adveng"};
+	char ostr[MEM_SIZE];
 	char input[MEM_SIZE] = {"hELLO"};
 
 	ClPlatform platform(CL_DEVICE_TYPE_GPU);
 
 	ClContext context(platform);
+
 	ClCommandQueue command_queue(context, platform);
-	/*
-	ClBuffer buffer(context);
 
-	buffer.EnqueueWriteBuffer();
+	ClBuffer buffer(context); 
 
-	ClKernel kernel(context);
+	command_queue.EnqueueWriteBuffer(buffer, istr);
 
-	kernel.loadSource();
-	ClProgram program(kernel);
+	ClProgram program(context, "./hello.cl");
+
+	ClKernel kernel(program);
 
 	program.BuildProgram(platform);
 
-	program.CreateKernel("kernel_name");
-	program.SetKernelArg(buffer);
+	kernel.open(program);
+	kernel.SetKernelArg(buffer);
 	
-	enqueueKernel();
+	command_queue.EnqueueKernel(kernel);
 	
-	buffer.EnqueueReadBuffer();
-	 */
-	/* Display Result */
-	puts(string);
+	command_queue.EnqueueReadBuffer(buffer, ostr);
 
-	printf("atl = %d\n", string[32]);
+	/* Display Result */
+	puts(ostr);
+
+	printf("atl = %d\n", ostr[32]);
 	
 	return 0;
 }

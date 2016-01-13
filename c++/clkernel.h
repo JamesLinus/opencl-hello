@@ -19,17 +19,36 @@ public:
 		close();
 	};
 	void close() {
+		if(!m_bOpen)
+			return;
 		lastError = clReleaseKernel(kernel);
+		m_bOpen = false;
 	}
 	void open(ClProgram &program) {	 
+		if(is_open())
+			return;
+		if(!program.is_open())
+			return;
+
 		/* Create OpenCL Kernel */
-		kernel = clCreateKernel(program.get(), prgram.name(), &lastError);
+		kernel = clCreateKernel(program.get(), program.name(), &lastError);
+		TRACE("lastError = %d\n", lastError);
+		if(lastError == CL_SUCCESS)
+			m_bOpen = true;
 	}
 	void SetKernelArg(ClBuffer buffer) {	 
-		m.memobj = buffer;
+		if(!is_open())
+			return;
+		if(!buffer.is_open())
+			return;
+		cl_mem memobj = buffer.get();
 		/* Set OpenCL Kernel Parameters */
-		lastError = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&m.memobj);
+		lastError = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void *)&memobj);
+		TRACE("lastError = %d\n", lastError);
 	};
+	cl_kernel get() {
+		return kernel;
+	}
 };
 
 #endif // _CLKERNEL_H

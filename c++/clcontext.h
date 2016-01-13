@@ -7,7 +7,6 @@ class ClContext : public ClObject {
 private:
 protected:
 	cl_context context;
-	ClPlatform platform;
 	cl_device_id device_id;
 public:
 	ClContext() {
@@ -19,12 +18,22 @@ public:
 		close();
 	};
 	void close() {
+		if(!m_bOpen)
+			return;
 		lastError = clReleaseContext(context);
+		m_bOpen = false;
 	}
 	void open(ClPlatform &platform) {
+		if(is_open())
+			return;
+		if(!platform.is_open())
+			return;
+
 		device_id = platform.get();
-		/* Create OpenCL context */
 		context = clCreateContext(NULL, 1, &device_id, NULL, NULL, &lastError);
+		TRACE("lastError = %d\n", lastError);
+		if(lastError == CL_SUCCESS)
+			m_bOpen = true;
 	}
 	cl_context get() {
 		return context;
