@@ -36,17 +36,17 @@ int main() {
 	program.build(platform);
 
 	ClKernel kernel(program);
-	kernel.SetKernelArg(obuffer, 0);
-	kernel.SetKernelArg(ibuffer, 1);
+	kernel.arg(obuffer, 0);
+	kernel.arg(ibuffer, 1);
 	
-	command_queue.EnqueueWriteBuffer(ibuffer, istr);
-	command_queue.EnqueueKernel(kernel);
-	command_queue.EnqueueReadBuffer(obuffer, ostr);
+	command_queue.write(ibuffer, istr);
+	command_queue.enqueueKernel(kernel);
+	command_queue.read(obuffer, ostr);
 
 	istr[0] = 0;
-	command_queue.EnqueueWriteBuffer(ibuffer, istr);
-	command_queue.EnqueueKernel(kernel);
-	command_queue.EnqueueReadBuffer(obuffer, ostr);
+	command_queue.write(ibuffer, istr);
+	command_queue.enqueueKernel(kernel);
+	command_queue.read(obuffer, ostr);
 	//printf("atl = %d\n", ostr[32]);
 	
 	return 0;

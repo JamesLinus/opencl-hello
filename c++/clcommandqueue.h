@@ -42,7 +42,7 @@ public:
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	};
-	void EnqueueKernel(ClKernel &kernel) {
+	void enqueueKernel(ClKernel &kernel) {
 		const size_t *global_work_offset = NULL;
 		const size_t global_work_size[1] = {1};
 		const size_t local_work_size[1] = {1};
@@ -59,7 +59,7 @@ public:
 #endif
 		TRACE("lastError = %d\n", lastError);
 	};
-	void EnqueueWriteBuffer(ClBuffer &buffer, const char *string) {
+	void write(ClBuffer &buffer, const char *string) {
 		if(!is_open())
 			return;
 		if(!buffer.is_open())
@@ -72,7 +72,7 @@ public:
 			INFO("string = %s\n", string);
 		}
 	};
-	void EnqueueReadBuffer(ClBuffer &buffer, char *string) {
+	void read(ClBuffer &buffer, char *string) {
 		if(!is_open())
 			return;
 		if(!buffer.is_open())

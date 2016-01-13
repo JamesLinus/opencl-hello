@@ -40,7 +40,7 @@ public:
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	}
-	void SetKernelArg(ClBuffer &buffer, int index) {	 
+	void arg(ClBuffer &buffer, int index) {	 
 		if(!is_open())
 			return;
 		if(!buffer.is_open())
