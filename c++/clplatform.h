@@ -29,7 +29,7 @@ public:
 		TRACE("lastError = %d\n", lastError);
 
 		lastError = clGetDeviceIDs(platform_id, type, 1, &device_id, &ret_num_devices);
-		//m.ret = clGetDeviceIDs(m.platform_id, CL_DEVICE_TYPE_ACCELERATOR, 1, &m.device_id, &m.ret_num_devices);
+		//lastError = clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_ACCELERATOR, 1, &device_id, &ret_num_devices);
 		TRACE("lastError = %d\n", lastError);
 
 		if(lastError != CL_SUCCESS) {
