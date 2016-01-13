@@ -22,6 +22,7 @@ protected:
 public:
 	ClObject() {
 		m_bOpen = false;
+		lastError = CL_SUCCESS;
 	};
 	~ClObject() {
 	}
@@ -29,32 +30,5 @@ public:
 		return m_bOpen;
 	};
 };
-/*
-class ocl_base {
-public:
-	cl_device_id device_id;
-	cl_context context;
-	cl_command_queue command_queue;
-	cl_mem memobj;
-	cl_program program;
-	cl_kernel kernel;
-	cl_platform_id platform_id;
-	cl_uint ret_num_devices;
-	cl_uint ret_num_platforms;
-	ocl_base() {
-		device_id = NULL;
-		context = NULL;
-		command_queue = NULL;
-		memobj = NULL;
-		program;
-		kernel;
-		platform_id;
-		ret_num_devices;
-		ret_num_platforms;
-		ret;
-	};
-	~ocl_base() {
-	}
-};
-*/
+
 #endif //_CLOBJECT_H

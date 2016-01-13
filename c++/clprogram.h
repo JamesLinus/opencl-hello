@@ -54,7 +54,7 @@ public:
 			return;
 		if(!context.is_open())
 			return;
-	
+		//TRACE("source_str = %s\n", source_str);	
 		/* Create Kernel Program from the source */
 		program = clCreateProgramWithSource(context.get(), 1, (const char **)&source_str,
 				(const size_t *)&source_size, &lastError);

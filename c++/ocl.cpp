@@ -19,26 +19,27 @@
 
 int main() {
 	char istr[MEM_SIZE] = {"adveng"};
-	char ostr[MEM_SIZE];
-	char input[MEM_SIZE] = {"hELLO"};
+	char ostr[MEM_SIZE] = {"blank"};
 
 	ClPlatform platform(CL_DEVICE_TYPE_GPU);
 
 	ClContext context(platform);
 
-	ClBuffer buffer(context); 
+	ClBuffer obuffer(context); 
+	ClBuffer ibuffer(context); 
 
 	ClCommandQueue command_queue(context, platform);
-//	command_queue.EnqueueWriteBuffer(buffer, istr);
+	command_queue.EnqueueWriteBuffer(ibuffer, istr);
 
 	ClProgram program(context, "./hello.cl", "hello");
 	program.BuildProgram(platform);
 
 	ClKernel kernel(program);
-	kernel.SetKernelArg(buffer, 0);
+	kernel.SetKernelArg(ibuffer, 0);
+	kernel.SetKernelArg(obuffer, 1);
 	
 	command_queue.EnqueueKernel(kernel);
-	command_queue.EnqueueReadBuffer(buffer, ostr);
+	command_queue.EnqueueReadBuffer(obuffer, ostr);
 
 	/* Display Result */
 	//puts(ostr);
