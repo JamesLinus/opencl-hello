@@ -20,28 +20,33 @@
 int main() {
 	char istr[MEM_SIZE] = {"adveng"};
 	char ostr[MEM_SIZE] = {"blank"};
+	size_t nSize = MEM_SIZE;
 
 	//ClPlatform platform(CL_DEVICE_TYPE_GPU);
 	ClPlatform platform(CL_DEVICE_TYPE_DEFAULT);
 
 	ClContext context(platform);
 
-	ClBuffer obuffer(context); 
-	ClBuffer ibuffer(context); 
+	ClBuffer obuffer(context, nSize * sizeof(char), true); 
+	ClBuffer ibuffer(context, nSize * sizeof(char), false); 
 
 	ClCommandQueue command_queue(context, platform);
-	command_queue.EnqueueWriteBuffer(ibuffer, istr);
 
 	ClProgram program(context, "./hello.cl", "hello");
-	program.BuildProgram(platform);
+	program.build(platform);
 
 	ClKernel kernel(program);
-	kernel.SetKernelArg(ibuffer, 0);
-	kernel.SetKernelArg(obuffer, 1);
+	kernel.SetKernelArg(obuffer, 0);
+	kernel.SetKernelArg(ibuffer, 1);
 	
+	command_queue.EnqueueWriteBuffer(ibuffer, istr);
 	command_queue.EnqueueKernel(kernel);
 	command_queue.EnqueueReadBuffer(obuffer, ostr);
 
+	istr[0] = 0;
+	command_queue.EnqueueWriteBuffer(ibuffer, istr);
+	command_queue.EnqueueKernel(kernel);
+	command_queue.EnqueueReadBuffer(obuffer, ostr);
 	//printf("atl = %d\n", ostr[32]);
 	
 	return 0;

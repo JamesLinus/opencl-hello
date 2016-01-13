@@ -14,14 +14,14 @@ public:
 	ClProgram() : ClObject() {
 	};
 	ClProgram(ClContext &context, const char *fileName, const char *progname) : ClObject() {
-		char *src = loadSource(fileName);
+		char *src = load(fileName);
 		open(context, src);
 		program_name = progname;
 	};
 	~ClProgram() {
 		close();
 	};
-	char *loadSource(const char *fileName) {
+	char *load(const char *fileName) {
 		/* Load the source code containing the kernel*/
 		FILE *fp;
 		fp = fopen(fileName, "r");
@@ -46,6 +46,7 @@ public:
 		lastError = clReleaseProgram(program);
 		if(source_str) 
 			free(source_str);
+		source_str = NULL;
 		TRACE("lastError = %d\n", lastError);
 		m_bOpen = false;
 	}
@@ -62,7 +63,7 @@ public:
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	};
-	void BuildProgram(ClPlatform platform) {
+	void build(ClPlatform platform) {
 		if(!is_open())
 			return;
 		if(!platform.is_open())

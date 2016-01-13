@@ -66,7 +66,7 @@ public:
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
 		if(lastError == CL_SUCCESS) {
-			TRACE("string = %s\n", string);
+			INFO("string = %s\n", string);
 		}
 	};
 	void EnqueueReadBuffer(ClBuffer &buffer, char *string) {
@@ -74,14 +74,13 @@ public:
 			return;
 		if(!buffer.is_open())
 			return;
-		TRACE("before string = %s\n", string);
 		/* Copy results from the memory buffer */
 		lastError = clEnqueueReadBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
 		/* Display Result */
 		if(lastError == CL_SUCCESS) {
-			TRACE("string = %s\n", string);
+			INFO("string = %s\n", string);
 		}
 	};
 };

@@ -5,12 +5,12 @@
 class ClBuffer : public ClObject {
 private:
 protected:
-	cl_mem memobj;
 public:
+	cl_mem memobj;
 	ClBuffer() {
 	};
-	ClBuffer(ClContext &context) {
-		open(context);
+	ClBuffer(ClContext &context, size_t nSize, bool bReadOnly) {
+		open(context, nSize, bReadOnly);
 	}
 	~ClBuffer() {
 		close();
@@ -20,19 +20,24 @@ public:
 			return;
 		/* Finalization */
 		lastError = clReleaseMemObject(memobj);
+		TRACE("lastError = %d\n", lastError);
 	}
-	void open(ClContext &context) {
+	void open(ClContext &context, size_t nSize, bool bReadOnly) {
 		if(is_open())
 			return;
 		if(!context.is_open())
 			return;
 		/* Create Memory Buffer */
-		memobj = clCreateBuffer(context.get(), CL_MEM_READ_WRITE, MEM_SIZE * sizeof(char), NULL, &lastError);
+		if(bReadOnly) {
+			memobj = clCreateBuffer(context.get(), CL_MEM_WRITE_ONLY, nSize, NULL, &lastError);
+		} else {
+			memobj = clCreateBuffer(context.get(), CL_MEM_READ_WRITE, nSize, NULL, &lastError);
+		}
 		TRACE("lastError = %d\n", lastError);
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	}
-	cl_mem get() {
+	cl_mem& get() {
 		return memobj;
 	};
 };

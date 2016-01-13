@@ -26,4 +26,5 @@ __kernel void hello(__global char* ostr, __global char *istr)
 	ostr[12] = '!';
 	ostr[13] = '\0';
 	ostr[32] = ostr[0] + 0;
+	istr[0] = 'R';
 }

@@ -46,9 +46,9 @@ public:
 		TRACE("clGetDeviceIDs ret_num_devices = %d, for device_id = %p, ret = %u\n", ret_num_devices, (int*)device_id, lastError);
 		char cBuffer[1024];
 		clGetDeviceInfo(device_id, CL_DEVICE_NAME, sizeof(cBuffer), &cBuffer, NULL);
-		TRACE("CL_DEVICE_NAME: %s\n", cBuffer);
+		INFO("CL_DEVICE_NAME: %s\n", cBuffer);
 		clGetDeviceInfo(device_id, CL_DRIVER_VERSION, sizeof(cBuffer), &cBuffer, NULL);
-		TRACE("CL_DRIVER_VERSION: %s\n\n", cBuffer);
+		INFO("CL_DRIVER_VERSION: %s\n", cBuffer);
 	};
 	~ClPlatform() {
 		close();

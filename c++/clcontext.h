@@ -6,9 +6,9 @@
 class ClContext : public ClObject {
 private:
 protected:
-	cl_context context;
 	cl_device_id device_id;
 public:
+	cl_context context;
 	ClContext() {
 	};
 	ClContext(ClPlatform &platform) {
@@ -35,7 +35,7 @@ public:
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	}
-	cl_context get() {
+	cl_context& get() {
 		return context;
 	}
 };

@@ -20,6 +20,7 @@ public:
 		if(!m_bOpen)
 			return;
 		lastError = clReleaseKernel(kernel);
+		TRACE("lastError = %d\n", lastError);
 		m_bOpen = false;
 	}
 	void open(ClProgram &program) {	 
@@ -28,10 +29,10 @@ public:
 		if(!program.is_open())
 			return;
 
-		TRACE("program name = %s\n", program.name());
+		//TRACE("program name = %s\n", program.name());
 
 		cl_program prog = program.get();
-		TRACE("program = %p\n", prog);
+		//TRACE("program = %p\n", prog);
 
 		/* Create OpenCL Kernel */
 		kernel = clCreateKernel(program.program, program.name(), &lastError);
@@ -44,10 +45,10 @@ public:
 			return;
 		if(!buffer.is_open())
 			return;
-		cl_mem memobj = buffer.get();
+		//void *memobj = buffer.get();
 		//TRACE("mem = %p\n", memobj);
 		/* Set OpenCL Kernel Parameters */
-		lastError = clSetKernelArg(kernel, index, sizeof(cl_mem), (void *)&memobj);
+		lastError = clSetKernelArg(kernel, index, sizeof(cl_mem), (void *)&buffer.memobj);
 		TRACE("lastError = %d\n", lastError);
 		TRACE("index = %d\n", index);
 	};

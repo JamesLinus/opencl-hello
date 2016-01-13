@@ -12,7 +12,8 @@
 
 #define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)
-#define TRACE(format, ...) fprintf(stdout, "(%s/%s:%d) " format, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__ )
+#define TRACE(format, ...) //fprintf(stdout, "(%s/%s:%d) " format, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__ )
+#define INFO(format, ...) fprintf(stdout, "(%s/%s:%d) " format, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__ )
 
 class ClObject {
 private:
