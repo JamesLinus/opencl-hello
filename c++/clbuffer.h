@@ -5,7 +5,6 @@
 class ClBuffer : public ClObject {
 private:
 protected:
-	ClContext context;
 	cl_mem memobj;
 public:
 	ClBuffer() {
@@ -17,6 +16,8 @@ public:
 		close();
 	}
 	void close() {
+		if(!is_open())
+			return;
 		/* Finalization */
 		lastError = clReleaseMemObject(memobj);
 	}

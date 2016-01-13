@@ -26,27 +26,22 @@ int main() {
 
 	ClContext context(platform);
 
-	ClCommandQueue command_queue(context, platform);
-
 	ClBuffer buffer(context); 
 
-	command_queue.EnqueueWriteBuffer(buffer, istr);
+	ClCommandQueue command_queue(context, platform);
+//	command_queue.EnqueueWriteBuffer(buffer, istr);
 
-	ClProgram program(context, "./hello.cl");
-
-	ClKernel kernel(program);
-
+	ClProgram program(context, "./hello.cl", "hello");
 	program.BuildProgram(platform);
 
-	kernel.open(program);
-	kernel.SetKernelArg(buffer);
+	ClKernel kernel(program);
+	kernel.SetKernelArg(buffer, 0);
 	
 	command_queue.EnqueueKernel(kernel);
-	
 	command_queue.EnqueueReadBuffer(buffer, ostr);
 
 	/* Display Result */
-	puts(ostr);
+	//puts(ostr);
 
 	printf("atl = %d\n", ostr[32]);
 	

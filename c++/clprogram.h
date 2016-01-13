@@ -3,45 +3,49 @@
 #include <clobject.h>
 #include <clcontext.h>
 
-static const char *tmpName = "hello";
-
 class ClProgram : public ClObject {
 private:
 protected:
 	cl_program program;
 	size_t source_size;
+	char *source_str;
+	const char *program_name;
 public:
 	ClProgram() : ClObject() {
 	};
-	ClProgram(ClContext &context, const char *source_str) : ClObject() {
-		open(context, source_str);
+	ClProgram(ClContext &context, const char *fileName, const char *progname) : ClObject() {
+		char *src = loadSource(fileName);
+		open(context, src);
+		program_name = progname;
 	};
 	~ClProgram() {
 		close();
 	};
-	char *loadSource(size_t *source_size, const char *fileName) {
+	char *loadSource(const char *fileName) {
 		/* Load the source code containing the kernel*/
 		FILE *fp;
-		char *source_str;
 		fp = fopen(fileName, "r");
 		if (!fp) {
-			fprintf(stderr, "Failed to load kernel.\n");
+			TRACE("Failed to load kernel source.\n");
 			exit(1);
 		}
 
 		source_str = (char*)malloc(MAX_SOURCE_SIZE);
-		*source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
+		source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
 		fclose(fp);
-		TRACE("Load Source code (size=%zd)\n", *source_size);
+		TRACE("Load Source code (size=%zd)\n", source_size);
+		//TRACE("src = %s\n", source_str);
 		return source_str;
 	};
 	const char *name() {
-		return tmpName;
+		return program_name;
 	}
 	void close() {
 		if(!m_bOpen)
 			return;
 		lastError = clReleaseProgram(program);
+		if(source_str) 
+			free(source_str);
 		TRACE("lastError = %d\n", lastError);
 		m_bOpen = false;
 	}
@@ -50,7 +54,7 @@ public:
 			return;
 		if(!context.is_open())
 			return;
-
+	
 		/* Create Kernel Program from the source */
 		program = clCreateProgramWithSource(context.get(), 1, (const char **)&source_str,
 				(const size_t *)&source_size, &lastError);

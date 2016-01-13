@@ -19,7 +19,7 @@ public:
 		close();
 	}
 	void close() {
-		if(!m_bOpen)
+		if(!is_open())
 			return;
 		lastError = clFlush(command_queue);
 		lastError = clFinish(command_queue);
@@ -66,6 +66,7 @@ public:
 		lastError = clEnqueueWriteBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
+		TRACE("string = %s\n", string);
 	};
 	void EnqueueReadBuffer(ClBuffer buffer, char *string) {
 		if(!is_open())
@@ -76,6 +77,7 @@ public:
 		lastError = clEnqueueReadBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
+		TRACE("string = %s\n", string);
 	};
 };
 
