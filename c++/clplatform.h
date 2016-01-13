@@ -46,8 +46,8 @@ public:
 		if(!is_open())
 			return;
 		char cBuffer[1024];
-		TRACE("clGetDeviceIDs ret_num_devices = %d, for device_id = %p, ret = %u\n", 
-				ret_num_devices, (int*)device_id, lastError);
+		TRACE("clGetDeviceIDs ret_num_devices = %d, for device_id = %p\n", 
+				ret_num_devices, (int*)device_id);
 		clGetDeviceInfo(device_id, CL_DEVICE_NAME, sizeof(cBuffer), &cBuffer, NULL);
 		INFO("CL_DEVICE_NAME: %s\n", cBuffer);
 		clGetDeviceInfo(device_id, CL_DRIVER_VERSION, sizeof(cBuffer), &cBuffer, NULL);
