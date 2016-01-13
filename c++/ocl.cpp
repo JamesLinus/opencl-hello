@@ -24,6 +24,7 @@ int main() {
 
 	//ClPlatform platform(CL_DEVICE_TYPE_GPU);
 	ClPlatform platform(CL_DEVICE_TYPE_DEFAULT);
+	platform.show();
 
 	ClContext context(platform);
 
