@@ -59,27 +59,27 @@ public:
 #endif
 		TRACE("lastError = %d\n", lastError);
 	};
-	void write(ClBuffer &buffer, const char *string) {
+	void write(ClBuffer &buffer, const char *string, size_t nsize) {
 		if(!is_open())
 			return;
 		if(!buffer.is_open())
 			return;
 		/* Copy input to the memory buffer */
 		lastError = clEnqueueWriteBuffer(command_queue, buffer.get(), CL_TRUE, 0,
-				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
+				nsize, string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
 		if(lastError == CL_SUCCESS) {
 			INFO("string = %s\n", string);
 		}
 	};
-	void read(ClBuffer &buffer, char *string) {
+	void read(ClBuffer &buffer, char *string, size_t nsize) {
 		if(!is_open())
 			return;
 		if(!buffer.is_open())
 			return;
 		/* Copy results from the memory buffer */
 		lastError = clEnqueueReadBuffer(command_queue, buffer.get(), CL_TRUE, 0,
-				MEM_SIZE * sizeof(char), string, 0, NULL, NULL);
+				nsize, string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
 		/* Display Result */
 		if(lastError == CL_SUCCESS) {

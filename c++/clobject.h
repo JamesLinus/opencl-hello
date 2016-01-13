@@ -10,9 +10,13 @@
 #include <CL/cl.h>
 #endif
 
-#define MEM_SIZE (128)
 #define MAX_SOURCE_SIZE (0x100000)
+
+#ifdef _DEBUG
+#define TRACE(format, ...) fprintf(stdout, "(%s/%s:%d) " format, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__ )
+#else
 #define TRACE(format, ...) //fprintf(stdout, "(%s/%s:%d) " format, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__ )
+#endif //_DEBUG
 #define INFO(format, ...) fprintf(stdout, "(%s/%s:%d) " format, __FILE__, __FUNCTION__, __LINE__, ## __VA_ARGS__ )
 
 class ClObject {

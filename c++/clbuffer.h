@@ -22,16 +22,16 @@ public:
 		lastError = clReleaseMemObject(memobj);
 		TRACE("lastError = %d\n", lastError);
 	}
-	void open(ClContext &context, size_t nSize, bool bReadOnly) {
+	void open(ClContext &context, size_t nsize, bool bReadOnly) {
 		if(is_open())
 			return;
 		if(!context.is_open())
 			return;
 		/* Create Memory Buffer */
 		if(bReadOnly) {
-			memobj = clCreateBuffer(context.get(), CL_MEM_WRITE_ONLY, nSize, NULL, &lastError);
+			memobj = clCreateBuffer(context.get(), CL_MEM_WRITE_ONLY, nsize, NULL, &lastError);
 		} else {
-			memobj = clCreateBuffer(context.get(), CL_MEM_READ_WRITE, nSize, NULL, &lastError);
+			memobj = clCreateBuffer(context.get(), CL_MEM_READ_WRITE, nsize, NULL, &lastError);
 		}
 		TRACE("lastError = %d\n", lastError);
 		if(lastError == CL_SUCCESS)

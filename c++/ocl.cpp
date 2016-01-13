@@ -39,15 +39,14 @@ int main() {
 	kernel.arg(obuffer, 0);
 	kernel.arg(ibuffer, 1);
 	
-	command_queue.write(ibuffer, istr);
+	command_queue.write(ibuffer, istr, nSize * sizeof(char));
 	command_queue.enqueueKernel(kernel);
-	command_queue.read(obuffer, ostr);
+	command_queue.read(obuffer, ostr, nSize * sizeof(char));
 
 	istr[0] = 0;
-	command_queue.write(ibuffer, istr);
+	command_queue.write(ibuffer, istr, nSize * sizeof(char));
 	command_queue.enqueueKernel(kernel);
-	command_queue.read(obuffer, ostr);
-	//printf("atl = %d\n", ostr[32]);
+	command_queue.read(obuffer, ostr, nSize * sizeof(char));
 	
 	return 0;
 }
