@@ -51,9 +51,12 @@ public:
 		if(!kernel.is_open())
 			return;
 		/* Execute OpenCL Kernel */
-		//ret = clEnqueueTask(command_queue, kernel, 0, NULL,NULL);
+#if(0)
+		lastError = clEnqueueTask(command_queue, kernel.get(), 0, NULL,NULL);
+#else
 		lastError = clEnqueueNDRangeKernel(command_queue, kernel.get(), 1, global_work_offset, 
 				global_work_size, local_work_size, 0, NULL, NULL);
+#endif
 		TRACE("lastError = %d\n", lastError);
 	};
 	void EnqueueWriteBuffer(ClBuffer &buffer, const char *string) {
