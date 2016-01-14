@@ -63,7 +63,7 @@ public:
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	};
-	void build(ClPlatform platform) {
+	void build(ClPlatform &platform) {
 		if(!is_open())
 			return;
 		if(!platform.is_open())
