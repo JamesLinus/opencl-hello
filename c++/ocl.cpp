@@ -22,8 +22,12 @@ int main() {
 	char ostr[MEM_SIZE] = {"blank"};
 	size_t nSize = MEM_SIZE;
 
-	//ClPlatform platform(CL_DEVICE_TYPE_GPU);
+#ifdef _FREESCALE
+	ClPlatform platform(CL_DEVICE_TYPE_GPU);
+#else
 	ClPlatform platform(CL_DEVICE_TYPE_DEFAULT);
+#endif //_FREESCALE
+
 	platform.show();
 
 	ClContext context(platform);
@@ -34,6 +38,7 @@ int main() {
 	ClCommandQueue command_queue(context, platform);
 
 	ClProgram program(context, "./hello.cl", "hello");
+	//ClProgram program(context, "./hello.cl", "otherfunc");
 	program.build(platform);
 
 	ClKernel kernel(program);
