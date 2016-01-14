@@ -5,8 +5,8 @@
 class ClBuffer : public ClObject {
 private:
 protected:
-public:
 	cl_mem memobj;
+public:
 	ClBuffer() {
 	};
 	ClBuffer(ClContext &context, size_t nSize, bool bReadOnly) {

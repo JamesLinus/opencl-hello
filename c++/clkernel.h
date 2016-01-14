@@ -45,10 +45,10 @@ public:
 			return;
 		if(!buffer.is_open())
 			return;
-		//void *memobj = buffer.get();
+		cl_mem memobj = buffer.get();
 		//TRACE("mem = %p\n", memobj);
 		/* Set OpenCL Kernel Parameters */
-		lastError = clSetKernelArg(kernel, index, sizeof(cl_mem), (void *)&buffer.memobj);
+		lastError = clSetKernelArg(kernel, index, sizeof(cl_mem), (void *)&memobj);
 		TRACE("lastError = %d\n", lastError);
 		TRACE("index = %d\n", index);
 	};
