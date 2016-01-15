@@ -40,17 +40,18 @@ public:
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	}
-	void arg(ClBuffer &buffer, int index) {	 
+	int arg(ClBuffer &buffer, int index) {	 
 		if(!is_open())
-			return;
+			return -1;
 		if(!buffer.is_open())
-			return;
+			return -1;
 		cl_mem memobj = buffer.get();
 		//TRACE("mem = %p\n", memobj);
 		/* Set OpenCL Kernel Parameters */
 		lastError = clSetKernelArg(kernel, index, sizeof(cl_mem), (void *)&memobj);
 		TRACE("lastError = %d\n", lastError);
 		TRACE("index = %d\n", index);
+		return index + 1;
 	};
 	cl_kernel& get() {
 		return kernel;

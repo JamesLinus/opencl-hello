@@ -41,9 +41,10 @@ int main() {
 	//ClProgram program(context, "./hello.cl", "otherfunc");
 	program.build(platform);
 
+	int index = 0;
 	ClKernel kernel(program);
-	kernel.arg(obuffer, 0);
-	kernel.arg(ibuffer, 1);
+	index = kernel.arg(obuffer, index);
+	index = kernel.arg(ibuffer, index);
 	
 	command_queue.write(ibuffer, istr, nSize * sizeof(char));
 	command_queue.enqueueKernel(kernel);

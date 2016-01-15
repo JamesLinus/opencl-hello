@@ -36,7 +36,8 @@ public:
 #endif //_FREESCALE
 
 #ifdef _INTEL
-		command_queue = clCreateCommandQueueWithProperties(context.get(), platform.get(), 0, &lastError);
+	//	command_queue = clCreateCommandQueueWithProperties(context.get(), platform.get(), 0, &lastError);
+		command_queue = clCreateCommandQueue(context.get(), platform.get(), 0, &lastError);
 #endif //_INTEL
 		TRACE("lastError = %d\n", lastError);
 		if(lastError == CL_SUCCESS)
