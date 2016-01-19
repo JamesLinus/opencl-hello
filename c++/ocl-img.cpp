@@ -98,6 +98,7 @@ int main()
 	gpu.arg(ibuffer);
 
 	nsize[0] = nSize;
+	TRACE("image size for device is %d\n", nsize[0]);
 	gpu.write(0, (char *)ostr, nSize * sizeof(unsigned char));
 	gpu.write(1, (char *)nsize, 10 * sizeof(int));
 	gpu.run();

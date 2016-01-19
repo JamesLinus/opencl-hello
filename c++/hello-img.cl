@@ -6,12 +6,24 @@ void addx(int a, int b, __global char *str, int idx)
 __kernel void hello(__global unsigned char* ostr, __global int *nsize)
 {
 	int base = get_global_id(0);
+	int shift = 100;
 	int cnt = 0;
-	for(cnt = 0; cnt < nsize[0]; cnt += 3)
+	//convert (B, G, R) triples to (R, G, B)
+//	for(cnt = 0; cnt < nsize[0]; cnt += 3)
+//	{
+//		unsigned char tmp = ostr[cnt]; 
+//		ostr[cnt] = ostr[cnt + 2]; 
+//		ostr[cnt+2] = tmp; 
+//	}
+	//now invert colors
+	for(cnt = 0; cnt < nsize[0]; cnt++)
 	{
-		unsigned char tmp = ostr[cnt]; 
-		ostr[cnt] = ostr[cnt + 2]; 
-		ostr[cnt+2] = tmp - 30; 
+		if(ostr[cnt] > 205) {
+			ostr[cnt] = 10;
+		}
+		if(ostr[cnt] < 10) {
+			ostr[cnt] = 205;
+		}
 	}
 }
 
