@@ -82,31 +82,26 @@ public:
 
 int main() 
 {
-	//char istr[MEM_SIZE] = {"adveng"}; // TODO: change these to image in memory
-	char ostr[MEM_SIZE] = {"blank"};
 	ClImage image("./test.bmp");
-	//size_t nSize = MEM_SIZE;
 	size_t nSize = image.Size();
-	char *istr = image.Data();
+	int nsize[10];
+	unsigned char *ostr = (unsigned char *)image.Data();
 
 	ClHost host(CL_DEVICE_TYPE_GPU);
 	ClDevice gpu(&host);
 
-	ClBuffer obuffer(host.get(), nSize * sizeof(char), true); 
-	ClBuffer ibuffer(host.get(), nSize * sizeof(char), false); 
+	ClBuffer obuffer(host.get(), nSize * sizeof(unsigned char), true); 
+	ClBuffer ibuffer(host.get(), 10 * sizeof(int), false); 
 
 	gpu.create("./hello-img.cl", "hello");
 	gpu.arg(obuffer);
 	gpu.arg(ibuffer);
-	
-	gpu.write(1, istr, nSize * sizeof(char));
-	gpu.run();
-	gpu.read(0, ostr, nSize * sizeof(char));
 
-	istr[0] = 0;
-	gpu.write(1, istr, nSize * sizeof(char));
+	nsize[0] = nSize;
+	gpu.write(0, (char *)ostr, nSize * sizeof(unsigned char));
+	gpu.write(1, (char *)nsize, 10 * sizeof(int));
 	gpu.run();
-	gpu.read(0, ostr, nSize * sizeof(char));
+	gpu.read(0, (char *)ostr, nSize * sizeof(char));
 
 	/*
 	// this is the algorithm to port to cl file
@@ -115,7 +110,6 @@ int main()
 		unsigned char tmp = istr[cnt];
 		istr[cnt] = istr[cnt+2];
 		istr[cnt+2] = tmp - 30;
-		cnt++;
 	}
 	*/
 	image.store("results.bmp");

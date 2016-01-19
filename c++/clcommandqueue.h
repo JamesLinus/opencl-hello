@@ -69,9 +69,9 @@ public:
 		lastError = clEnqueueWriteBuffer(command_queue, buffer.get(), CL_TRUE, 0,
 				nsize, string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
-		if(lastError == CL_SUCCESS) {
-			INFO("string = %s\n", string);
-		}
+//		if(lastError == CL_SUCCESS) {
+//			INFO("write string = %s\n", string);
+//		}
 	};
 	void read(ClBuffer &buffer, char *string, size_t nsize) {
 		if(!is_open())
@@ -83,9 +83,9 @@ public:
 				nsize, string, 0, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
 		/* Display Result */
-		if(lastError == CL_SUCCESS) {
-			INFO("string = %s\n", string);
-		}
+//		if(lastError == CL_SUCCESS) {
+//			INFO("read string = %s\n", string);
+//		}
 	};
 };
 
