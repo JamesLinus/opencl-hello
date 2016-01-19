@@ -26,5 +26,5 @@ pc:
 	g++ -I /opt/intel/opencl-1.2-sdk-5.0.0.43/include -L /opt/intel/opencl-1.2-5.0.0.43/lib64 -o ocl ocl.cpp -Wl,-rpath,/opt/intel/opencl-1.2-5.0.0.43/lib64 -lOpenCL -D_INTEL -I.
 
 clean:
-	rm ocl
+	rm ocl ocl2
 
