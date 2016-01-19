@@ -1,4 +1,4 @@
-void addx(int a, int b, char *str, int idx)
+void addx(int a, int b, __global char *str, int idx)
 {
 	str[idx] = a + b + 1;
 }
@@ -21,8 +21,8 @@ __kernel void hello(__global char* ostr, __global char *istr)
 	ostr[8] = 'o';
 	ostr[9] = 'r';
 	ostr[10] = 'l';
-	ostr[11] = 'd';
-//	addx('d', base, ostr, 11);
+//	ostr[11] = 'd';
+	addx('d', base, ostr, 11);
 	ostr[12] = '!';
 	ostr[13] = '\0';
 	ostr[32] = ostr[0] + 0;
