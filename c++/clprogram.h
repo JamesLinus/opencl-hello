@@ -63,17 +63,20 @@ public:
 		if(lastError == CL_SUCCESS)
 			m_bOpen = true;
 	};
-	void build(ClPlatform &platform) {
+	bool build(ClPlatform &platform) {
 		if(!is_open())
-			return;
+			return false;
 		if(!platform.is_open())
-			return;
+			return false;
 
 		cl_device_id device_id = platform.get();
 
 		/* Build Kernel Program */
 		lastError = clBuildProgram(program, 1, &device_id, NULL, NULL, NULL);
 		TRACE("lastError = %d\n", lastError);
+		if(lastError == CL_SUCCESS)
+			return true;
+		return false;
 	};
 	cl_program& get() {
 		return program;

@@ -60,6 +60,28 @@ public:
 #endif
 		TRACE("lastError = %d\n", lastError);
 	};
+	void enqueueKernel(ClKernel &kernel, int dimCount, size_t *global, size_t *local) {
+		const size_t *global_work_offset = NULL; // must be NULL
+		if(!is_open())
+			return;
+		if(!kernel.is_open())
+			return;
+
+//		size_t local[1] = {1}; //get_local_size()
+//		lastError = clGetKernelWorkGroupInfo(kernel.get(), device_id, 
+//				CL_KERNEL_WORK_GROUP_SIZE, sizeof(local), local, NULL);
+//		TRACE("lastError = %d\n", lastError);
+
+		/* Execute OpenCL Kernel */
+#if(0)
+		lastError = clEnqueueTask(command_queue, kernel.get(), 0, NULL,NULL);
+#else
+		lastError = clEnqueueNDRangeKernel(command_queue, kernel.get(), dimCount, 
+				global_work_offset, global, local, 
+				0, NULL, NULL);
+#endif
+		TRACE("lastError = %d\n", lastError);
+	};
 	void write(ClBuffer &buffer, const char *string, size_t nsize) {
 		if(!is_open())
 			return;

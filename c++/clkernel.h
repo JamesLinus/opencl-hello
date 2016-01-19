@@ -53,6 +53,19 @@ public:
 		TRACE("index = %d\n", index);
 		return index + 1;
 	};
+	int arg(unsigned int &buffer, int index) {	 
+		if(!is_open())
+			return -1;
+		//if(!buffer.is_open())
+		//	return -1;
+		//cl_mem memobj = buffer.get();
+		//TRACE("mem = %p\n", memobj);
+		/* Set OpenCL Kernel Parameters */
+		lastError = clSetKernelArg(kernel, index, sizeof(unsigned int), (void *)&buffer);
+		TRACE("lastError = %d\n", lastError);
+		TRACE("index = %d\n", index);
+		return index + 1;
+	};
 	cl_kernel& get() {
 		return kernel;
 	}

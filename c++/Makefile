@@ -8,6 +8,7 @@ ifeq ($(ARCH),x86_64)
 	g++ -I /opt/intel/opencl-1.2-sdk-5.0.0.43/include -L /opt/intel/opencl-1.2-5.0.0.43/lib64 -o ocl ocl.cpp -Wl,-rpath,/opt/intel/opencl-1.2-5.0.0.43/lib64 -lOpenCL -D_INTEL -I. -D_DEBUG
 	g++ -I /opt/intel/opencl-1.2-sdk-5.0.0.43/include -L /opt/intel/opencl-1.2-5.0.0.43/lib64 -o ocl2 ocl2.cpp -Wl,-rpath,/opt/intel/opencl-1.2-5.0.0.43/lib64 -lOpenCL -D_INTEL -I. -D_DEBUG
 	g++ -I /opt/intel/opencl-1.2-sdk-5.0.0.43/include -L /opt/intel/opencl-1.2-5.0.0.43/lib64 -o ocl-img ocl-img.cpp -Wl,-rpath,/opt/intel/opencl-1.2-5.0.0.43/lib64 -lOpenCL -D_INTEL -I. -D_DEBUG
+	g++ -I /opt/intel/opencl-1.2-sdk-5.0.0.43/include -L /opt/intel/opencl-1.2-5.0.0.43/lib64 -o ocl-invert ocl-img.cpp -Wl,-rpath,/opt/intel/opencl-1.2-5.0.0.43/lib64 -lOpenCL -D_INTEL -I. -D_DEBUG -D_WITH_INVERT
 else
 	g++ -I /usr/include -L /usr/lib -D_FREESCALE -o ocl ocl.cpp -Wl,-rpath,/usr/lib -lGAL -lOpenCL -I.
 	g++ -I /usr/include -L /usr/lib -D_FREESCALE -o ocl2 ocl2.cpp -Wl,-rpath,/usr/lib -lGAL -lOpenCL -I.

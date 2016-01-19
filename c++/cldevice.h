@@ -40,16 +40,27 @@ public:
 		delete program;
 		delete kernel;
 	};
-	void create(const char *fileName, const char *kernelName) {
+	bool create(const char *fileName, const char *kernelName) {
 		program = new ClProgram(*m_context->context, fileName, kernelName);
-		program->build(*m_context->platform);
+		bool ret = program->build(*m_context->platform);
 		kernel = new ClKernel(*program);
+		if(ret == true)
+			return true;
+		TRACE("create failed for program kernel %s\n", kernelName);
+		return false;
 	};
 	void arg(ClBuffer &buffer) {
 		//if(bClear == true)
 		//	index = 0;
 		//mapBufSize[index] = nsize;
 		mapBuffer[index] = &buffer;
+		index = kernel->arg(buffer, index);
+	};
+	void arg(unsigned int &buffer) {
+		//if(bClear == true)
+		//	index = 0;
+		//mapBufSize[index] = nsize;
+		//mapBuffer[index] = &buffer;
 		index = kernel->arg(buffer, index);
 	};
 	void write(int index, const char *istr, int nsize) {
@@ -62,6 +73,10 @@ public:
 	}
 	void run() {
 		m_context->command_queue->enqueueKernel(*kernel);
+	};
+	void run(int dimCount, size_t *global, size_t *local) {
+//		cl_device_id device_id = m_context->context->getId();
+		m_context->command_queue->enqueueKernel(*kernel, dimCount, global, local);
 	};
 };
 

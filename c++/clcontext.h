@@ -38,6 +38,9 @@ public:
 	cl_context& get() {
 		return context;
 	}
+	cl_device_id getId() {
+		return device_id;
+	}
 	void getEvent(cl_event &evt) {
 		if(!is_open())
 			return;

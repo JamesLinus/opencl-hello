@@ -3,11 +3,25 @@ void addx(int a, int b, __global char *str, int idx)
 	str[idx] = a + b + 1;
 }
 
-__kernel void hello(__global unsigned char* ostr, __global int *nsize)
+__kernel void hello(__global unsigned char* ostr, __global int *width)
 {
-	int base = get_global_id(0);
-	int shift = 100;
-	int cnt = 0;
+	unsigned int x = get_global_id(0);
+	unsigned int y = get_global_id(1);
+	//unsigned int index = x + (y * width[0]);
+	unsigned int index = (get_global_id(1) * get_global_size(0)) + get_global_id(0);
+	//unsigned int index = x;
+	if(ostr[index] > 205) {
+		ostr[index] = 10;
+	}
+	if(ostr[index] < 10) {
+		ostr[index] = 205;
+	}
+}
+
+__kernel void imageinvert(__global unsigned char* ostr, const unsigned int nsize)
+{
+	//int x = get_global_id(0);
+	//int y = get_global_id(1);
 	//convert (B, G, R) triples to (R, G, B)
 //	for(cnt = 0; cnt < nsize[0]; cnt += 3)
 //	{
@@ -16,7 +30,8 @@ __kernel void hello(__global unsigned char* ostr, __global int *nsize)
 //		ostr[cnt+2] = tmp; 
 //	}
 	//now invert colors
-	for(cnt = 0; cnt < nsize[0]; cnt++)
+	int cnt = 0;
+	for(cnt = 0; cnt < nsize; cnt++)
 	{
 		if(ostr[cnt] > 205) {
 			ostr[cnt] = 10;
@@ -27,28 +42,8 @@ __kernel void hello(__global unsigned char* ostr, __global int *nsize)
 	}
 }
 
-__kernel void otherfunc(__global char* ostr, __global char *istr)
+__kernel void procimg(__read_only image2d_t srcImage, __write_only image2d_t destImage)
 {
-	int base = get_global_id(0);
-	if(istr[0] < 1) {
-		ostr[0] = 'H';
-	} else {
-		ostr[0] = 'G';
-	}
-	ostr[1] = 'e';
-	ostr[2] = 'l';
-	ostr[3] = 'l';
-	ostr[4] = 'o';
-	ostr[5] = ',';
-	ostr[6] = ' ';
-	ostr[7] = 'W';
-	ostr[8] = 'o';
-	ostr[9] = 'r';
-	ostr[10] = 'l';
-	ostr[11] = 'd';
-//	addx('d', base, ostr, 11);
-	ostr[12] = '!';
-	ostr[13] = '\0';
-	ostr[32] = ostr[0] + 0;
-	istr[0] = 'R';
+	//read_imagef()
+
 }
