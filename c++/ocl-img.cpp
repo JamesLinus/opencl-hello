@@ -29,11 +29,11 @@ protected:
 	std::fstream file;
 	int m_length;
 	int m_nsize;
-	int width;
-	int height;
 	unsigned char *m_buffer;
 	unsigned char *m_header;
 public:
+	int width;
+	int height;
 	ClImage() {
 	};
 	ClImage(const char *fileName) {
