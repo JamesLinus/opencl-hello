@@ -74,11 +74,13 @@ public:
 		mapBuffer[index] = &buffer;
 		index = kernel->arg(buffer, index);
 	};
-	void write(ClBuffer &buffer, const char *istr, int nsize) {
-		m_context->command_queue->write(buffer, istr, nsize);
+	void write(int index, const char *istr, int nsize) {
+		ClBuffer *buffer = mapBuffer[index];
+		m_context->command_queue->write(*buffer, istr, nsize);
 	};
-	void read(ClBuffer &buffer, char *ostr, int nsize) {
-		m_context->command_queue->read(buffer, ostr, nsize);
+	void read(int index, char *ostr, int nsize) {
+		ClBuffer *buffer = mapBuffer[index];
+		m_context->command_queue->read(*buffer, ostr, nsize);
 	}
 	void run() {
 		m_context->command_queue->enqueueKernel(*kernel);
@@ -101,13 +103,13 @@ int main()
 	gpu.arg(obuffer);
 	gpu.arg(ibuffer);
 	
-	gpu.write(ibuffer, istr, nSize * sizeof(char));
+	gpu.write(1, istr, nSize * sizeof(char));
 	gpu.run();
-	gpu.read(obuffer, ostr, nSize * sizeof(char));
+	gpu.read(0, ostr, nSize * sizeof(char));
 
 	istr[0] = 0;
-	gpu.write(ibuffer, istr, nSize * sizeof(char));
+	gpu.write(1, istr, nSize * sizeof(char));
 	gpu.run();
-	gpu.read(obuffer, ostr, nSize * sizeof(char));
+	gpu.read(0, ostr, nSize * sizeof(char));
 }
 
