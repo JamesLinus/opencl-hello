@@ -29,6 +29,8 @@ protected:
 	std::fstream file;
 	int m_length;
 	int m_nsize;
+	int width;
+	int height;
 	unsigned char *m_buffer;
 	unsigned char *m_header;
 public:
@@ -52,8 +54,8 @@ public:
 		open(fileName);
 		m_header = new unsigned char[54];
 		file.read((char *)m_header, 54);
-		int width = *(int*)&m_header[18];
-		int height = *(int*)&m_header[22];
+		width = *(int*)&m_header[18];
+		height = *(int*)&m_header[22];
 		TRACE("image width = %d, height = %d\n", width, height);
 		m_nsize = 3 * width * height;
 		TRACE("image nsize = %d\n", m_nsize);
@@ -98,6 +100,8 @@ int main()
 	gpu.arg(ibuffer);
 
 	nsize[0] = nSize;
+	nsize[1] = image.width;
+	nsize[2] = image.height;
 	TRACE("image size for device is %d\n", nsize[0]);
 	gpu.write(0, (char *)ostr, nSize * sizeof(unsigned char));
 	gpu.write(1, (char *)nsize, 10 * sizeof(int));
@@ -107,10 +111,14 @@ int main()
 	/*
 	// this is the algorithm to port to cl file
 	int cnt = 0;
-	for(cnt  = 0; cnt < nSize; cnt += 3) {
-		unsigned char tmp = istr[cnt];
-		istr[cnt] = istr[cnt+2];
-		istr[cnt+2] = tmp - 30;
+	for(cnt = 0; cnt < nsize[0]; cnt++)
+	{
+		if(ostr[cnt] > 205) {
+			ostr[cnt] = 10;
+		}
+		if(ostr[cnt] < 10) {
+			ostr[cnt] = 205;
+		}
 	}
 	*/
 	image.store("results.bmp");
